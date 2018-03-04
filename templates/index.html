@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>VocApp</title>
+  <link rel="stylesheet" href="../static/css/theme.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> </head>
+
+<body class="bg-primary">
+  <nav class="navbar navbar-expand-md bg-secondary navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">VocApp</a>
+      <a class="navbar-brand" href="/"><i class="fa d-inline fa-lg fa-book"></i></a>
+      <a class="navbar-brand" href="{{ url_for('exam') }}"><i class="fa d-inline fa-lg fa-check-square-o"></i></a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span> </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent"> </div>
+    </div>
+  </nav> {% if err %}
+  <div class="py-2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert alert-{{ warning }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+            <h4 class="alert-heading">{{ err }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> {% endif %} {% if url_for('exam') in request.path %}
+  <br>
+  <form method="POST" action="" class="text-justify mx-auto w-75">
+    <input type="text" name="wordcheck" class="form-control-lg w-100" placeholder="{{ item. word }}" required="required">
+    <input type="hidden" value="{{ item.id }}" name="newid">
+    <button type="submit" value="Check" class="btn btn-lg btn-outline-secondary text-light w-100">Check</button>
+  </form> {% endif %}
+  <br>{% if request.path[1:] in word %}
+  <form method="POST" action="/{{ word }}/update" class="text-justify mx-auto w-75">
+    <input type="hidden" value="{{ word }}" name="oldword">
+    <input type="text" name="newword" class="form-control-lg w-100" value="{{ word }}">
+    <br>
+    <input type="hidden" name="oldtrans" value="{{ query.translation }}">
+    <input type="text" name="newtrans" class="form-control-lg w-100" value="{{ query.translation }}">
+    <button type="submit" value="Update" class="btn btn-lg btn-outline-secondary text-light w-100">Update</button>
+  </form>
+  <form method="POST" action="/{{ word }}/delete" class="text-justify mx-auto w-75">
+    <input type="hidden" value="{{ word }}" name="word">
+    <button type="submit" value="Delete" class="btn btn-lg btn-outline-secondary text-light w-100">Delete</button>
+  </form> {% else %}
+  <form method="POST" action="/" class="text-justify mx-auto w-75">
+    <input type="text" name="word" class="form-control-lg w-100" placeholder="Word" required="required">
+    <br>
+    <input type="text" name="translation" class="form-control-lg w-100" placeholder="Translation" required="required">
+    <button type="submit" value="Add" class="btn btn-lg btn-outline-secondary text-light w-100">Add</button>
+  </form> {% endif %}
+  <div class="container my-2 w-100">{% for item in items %}
+    <form method="GET" action="./{{ item.word }}" class="text-justify w-75 bg-secondary mx-auto">
+      <button type="submit" value="Add" class="btn btn-lg text-light w-100 btn-outline-success">{{ item.word }} : {{ item.translation }}</button>
+    </form> {% endfor %}</div>
+</body>
+
+</html>
